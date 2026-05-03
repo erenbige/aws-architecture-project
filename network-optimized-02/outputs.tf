@@ -1,4 +1,4 @@
-output "alb_dns_name" {
-  description = "Application Load Balancer DNS Adresi"
-  value       = aws_lb.main.dns_name # 'main' kısmını lb kaynağına verdiğin isimle değiştir
+output "alb_url" {
+  description = "Network Optimized Mimari Linki"
+  value       = "http://${aws_lb.alb.dns_name}"
 }
