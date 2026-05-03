@@ -1,9 +1,9 @@
-# Statik dosyalar için S3 Bucket
+# 1. Statik dosyalar için S3 Bucket
 resource "aws_s3_bucket" "frontend_bucket" {
-  bucket = "eren-presentation-frontend-2026" # Global olarak benzersiz bir isim seçmelisin
+  bucket = "eren-presentation-frontend-2026" # Senin kullandığın isim
 }
 
-# S3'e doğrudan erişimi kapatan OAC (Origin Access Control)
+# 2. S3'e doğrudan erişimi kapatan OAC (Origin Access Control)
 resource "aws_cloudfront_origin_access_control" "oac" {
   name                              = "s3-oac"
   origin_access_control_origin_type = "s3"
@@ -11,7 +11,7 @@ resource "aws_cloudfront_origin_access_control" "oac" {
   signing_protocol                  = "sigv4"
 }
 
-# CloudFront Dağıtımı (CDN)
+# 3. CloudFront Dağıtımı (CDN)
 resource "aws_cloudfront_distribution" "cdn" {
   origin {
     domain_name              = aws_s3_bucket.frontend_bucket.bucket_regional_domain_name
@@ -42,4 +42,29 @@ resource "aws_cloudfront_distribution" "cdn" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+}
+
+# 4. S3 Bucket Policy - CloudFront OAC'ye erişim izni veren kritik parça
+resource "aws_s3_bucket_policy" "allow_access_from_cloudfront" {
+  bucket = aws_s3_bucket.frontend_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AllowCloudFrontServicePrincipalReadOnly"
+        Effect    = "Allow"
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        }
+        Action   = "s3:GetObject"
+        Resource = "${aws_s3_bucket.frontend_bucket.arn}/*"
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = aws_cloudfront_distribution.cdn.arn
+          }
+        }
+      }
+    ]
+  })
 }
