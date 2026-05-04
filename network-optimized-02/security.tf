@@ -1,4 +1,3 @@
-# Load Balancer için Güvenlik Grubu (Dış dünyaya açık)
 resource "aws_security_group" "alb_sg" {
   name        = "opt-alb-sg"
   description = "Allow HTTP inbound traffic"
@@ -19,7 +18,6 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
-# EC2 Makineleri için Güvenlik Grubu (Sadece ALB'den gelen trafiğe açık)
 resource "aws_security_group" "ec2_sg" {
   name        = "opt-ec2-sg"
   description = "Allow traffic from ALB only"

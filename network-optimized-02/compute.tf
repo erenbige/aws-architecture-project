@@ -24,7 +24,6 @@ resource "aws_lb_listener" "listener" {
   }
 }
 
-# Launch Template (Uygulama Tanımı)
 resource "aws_launch_template" "lt" {
   name_prefix   = "opt-app-"
   image_id      = "ami-071878317c449ae48" # Amazon Linux 2023 - eu-central-1

@@ -9,9 +9,6 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-# ==========================================
-# INTERNAL ALB (İç Yük Dengeleyici)
-# ==========================================
 resource "aws_lb" "internal_alb" {
    name               = "app-backend-alb"
   internal           = true # İnternete kapalı! Sadece Nginx üzerinden erişilir.
@@ -104,7 +101,6 @@ resource "aws_instance" "nginx_proxy" {
   
   vpc_security_group_ids = [aws_security_group.nginx_sg.id]
 
-  # Nginx kuran ve trafiği dinamik olarak Internal ALB'ye yönlendiren Script
   user_data = <<-EOF
               #!/bin/bash
               dnf update -y

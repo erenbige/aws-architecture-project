@@ -19,7 +19,6 @@ resource "aws_apigatewayv2_route" "route" {
   target    = "integrations/${aws_apigatewayv2_integration.lambda_int.id}"
 }
 
-# API Gateway'in Lambda'yı çağırma izni
 resource "aws_lambda_permission" "apigw" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.func.function_name

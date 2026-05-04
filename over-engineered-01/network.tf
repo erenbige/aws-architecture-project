@@ -1,4 +1,3 @@
-# 1. Kendi Özel Ağımız (VPC)
 resource "aws_vpc" "main_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -9,7 +8,6 @@ resource "aws_vpc" "main_vpc" {
   }
 }
 
-# 2. İnternet Kapısı (Internet Gateway)
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main_vpc.id
 
@@ -51,7 +49,6 @@ resource "aws_subnet" "private_subnet_2" {
   }
 }
 
-# 5. Public Route Table (Nginx'in internete çıkabilmesi için)
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.main_vpc.id
 
